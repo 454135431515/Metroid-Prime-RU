@@ -22,3 +22,9 @@ metroid_prime_port*.log
 *.db
 archipelago.json
 /screenshots/
+
+# Сборка импортёра (tools/freeze.sh)
+dist/
+build/
+# Карта памяти порта, запущенного из корня
+/USA/
