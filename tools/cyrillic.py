@@ -241,11 +241,27 @@ def cap_Д(P):
     rect(m, w - s - 0, 0, w, h)
     rect(m, 0, h - t, w, h)
     chamfer(m, (2 * u, 0))
-    tail(m, 0, s - u, P.desc)
+    tt = s - (u + 1) // 2  # хвост: в растре s-1 px, в HD ~3/4 стема (тоньше выглядит нитью)
+    tail(m, 0, tt, P.desc)
     for row in m[h:]:
-        for i in range(w - s + u, w):
+        for i in range(w - tt, w):
             row[i] = True
     return Drawn(m, below=P.desc)
+
+
+def cap_З(P):
+    """З: верхняя чаша уже нижней, правый стем с уступом на перекладине. Копия цифры 3 совпадала
+    с Э — «Зта», «забрало» с Э."""
+    s, t, w, h, mid, u = P.s, P.t, P.w, P.h, P.mid, UNIT
+    r = w - 2 * u  # правый край верхней чаши
+    m = canvas(w, h)
+    rect(m, 0, 0, r, t)
+    rect(m, r - s, 0, r, mid + t)
+    rect(m, w // 3, mid, w, mid + t)
+    rect(m, w - s, mid, w, h)
+    rect(m, 0, h - t, w, h)
+    chamfer(m, (0, 0), (r - 1, 0), (w - 1, mid), (w - 1, h - 1), (0, h - 1))
+    return Drawn(m)
 
 
 def cap_Ж(P):
@@ -281,14 +297,15 @@ def cap_Й(P):
 
 
 def cap_Л(P):
-    """Л: левая нога со ступенькой — сверху сдвинута внутрь, внизу у края (иначе читается как П)."""
+    """Л: левая нога вертикальна до середины, ниже уходит скосом к левому краю (иначе читается
+    как П). Прежняя ступенька в ноге выглядела изломом и выбивалась из шрифта."""
     s, t, w, h = P.s, P.t, P.w, P.h
     k = max(s // 2, 2 * UNIT)
-    knee = h * 2 // 3
+    knee = h // 2
     m = canvas(w, h)
     rect(m, k, 0, w, t)
-    rect(m, k, 0, k + s, knee)
-    rect(m, 0, knee - UNIT, s, h)
+    rect(m, k, 0, k + s, knee + UNIT)
+    diagonal(m, k, knee, 0, h - 1, s)
     rect(m, w - s, 0, w, h)
     chamfer(m, (k, 0), (w - 1, 0))
     return Drawn(m)
@@ -359,7 +376,7 @@ def cap_Ь(P):
 def cap_Э(P):
     m = [r[::-1] for r in P.mask("C")]
     w = len(m[0])
-    rect(m, w // 3, P.mid, w, P.mid + P.t)
+    rect(m, w // 2, P.mid, w, P.mid + P.t)  # от середины: с w//3 Э не отличить от З и цифры 3
     return Drawn(m)
 
 
@@ -387,7 +404,7 @@ CAPITALS = {
     "К": ("K", ("copy", "K")), "М": ("H", ("draw", cap_М)), "Н": ("H", ("copy", "H")),
     "О": ("O", ("copy", "O")), "Р": ("P", ("copy", "P")), "С": ("C", ("copy", "C")),
     "Т": ("T", ("copy", "T")), "Х": ("X", ("copy", "X")),
-    "П": ("N", ("copy", "N")), "Ш": ("W", ("copy", "W")), "З": ("3", ("copy", "3")),
+    "П": ("N", ("copy", "N")), "Ш": ("W", ("copy", "W")), "З": ("3", ("draw", cap_З)),
     "Ч": ("4", ("copy", "4")), "Я": ("R", ("mirror", "R")),
     "Б": ("H", ("draw", cap_Б)), "Г": ("E", ("draw", cap_Г)), "Д": ("H", ("draw", cap_Д)),
     "Ж": ("K", ("draw", cap_Ж)), "И": ("H", ("draw", cap_И)), "Й": ("H", ("draw", cap_Й)),
@@ -425,7 +442,7 @@ LOWERCASE = {
     "р": ("p", ("copy", "p")), "с": ("c", ("copy", "c")), "у": ("y", ("copy", "y")),
     "х": ("x", ("copy", "x")), "п": ("n", ("draw", low_small("N"))), "м": ("n", ("draw", low(cap_М))),
     "ш": ("w", ("copy", "w")), "г": ("r", ("copy", "r")), "б": ("n", ("draw", low(cap_Б))),
-    "в": ("n", ("draw", low_small("B"))), "з": ("n", ("draw", low_small("3"))),
+    "в": ("n", ("draw", low_small("B"))), "з": ("n", ("draw", low(cap_З))),
     "к": ("n", ("draw", low_small("K"))), "н": ("n", ("draw", low_small("H"))),
     "т": ("n", ("draw", low_small("T"))), "ч": ("n", ("draw", low_small("4"))),
     "я": ("n", ("small_mirror", "R")),
