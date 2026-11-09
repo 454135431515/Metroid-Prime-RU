@@ -12,6 +12,7 @@ permissions:
 jobs:
   freeze:
     strategy:
+      fail-fast: false
       matrix:
         include:
           - os: ubuntu-22.04  # glibc 2.35: собранное на новой системе не стартует на старой
