@@ -21,6 +21,12 @@ import build_mod  # noqa: E402
 import extract  # noqa: E402
 
 
+# Порт читает вывод через pipe; на Windows Python писал бы в нём в кодировке системы (cp1252 —
+# UnicodeEncodeError на русском тексте).
+for _s in (sys.stdout, sys.stderr):
+    _s.reconfigure(encoding="utf-8", errors="replace")
+
+
 def fail(msg):
     print(f"Ошибка: {msg}", flush=True)
     sys.exit(1)
@@ -78,7 +84,7 @@ def main(argv):
         shutil.rmtree(work, ignore_errors=True)
     if stale:
         fail(f"{stale} строк не совпали с диском: образ не USA 1.00 или повреждён")
-    print("Готово: перевод в mods/russian. Нажмите Reload mods или перезапустите игру.", flush=True)
+    print("Готово: перевод в mods/russian. Перезапустите игру.", flush=True)
     return 0
 
 
