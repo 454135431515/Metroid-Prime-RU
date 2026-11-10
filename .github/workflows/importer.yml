@@ -19,7 +19,7 @@ jobs:
             asset: russian-importer-linux-x86_64.tar.gz
           - os: windows-latest
             asset: russian-importer-windows-x86_64.zip
-          - os: macos-14
+          - os: macos-latest
             asset: russian-importer-macos-arm64.zip
     runs-on: ${{ matrix.os }}
     defaults:
