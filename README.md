@@ -15,7 +15,7 @@ Remastered текст рисуется HD-шрифтом с кириллицей
 | ![Журнал](docs/screenshots/logbook.png) | ![Карта и легенда](docs/screenshots/map.png) |
 
 ## Что нужно
-- порт [Odrannnn/MetroidPrimePort](https://github.com/Odrannnn/MetroidPrimePort/releases): совместимость проверена на **v0.43.0** (9 ноября 2026: все 276 комнат с Remastered и без, меню, HUD, карта, пауза, журнал). На более новых версиях перевод, скорее всего, тоже работает; если что-то сломалось, [откройте issue](https://github.com/454135431515/metroid-prime-ru/issues) с версией порта и логом;
+- порт [Odrannnn/MetroidPrimePort](https://github.com/Odrannnn/MetroidPrimePort/releases): совместимость проверена на **v0.44.0** (10 ноября 2026: все 276 комнат с Remastered и без, главное меню). С v0.44.0 по-русски и строки самого порта: «Выйти из игры», его пункты в паузе, легенда карты; на старых версиях они остаются английскими. На более новых версиях перевод, скорее всего, тоже работает; если что-то сломалось, [откройте issue](https://github.com/454135431515/metroid-prime-ru/issues) с версией порта и логом;
 - свой образ **Metroid Prime USA 1.00** (`GM8E01`, ревизия 0) в ISO; другие ревизии и PAL
   не поддерживаются;
 - Python 3 с пакетами Pillow и numpy: `pip install Pillow numpy`.
@@ -60,7 +60,7 @@ python -I tools/build_mod.py work/res text/ru.json <папка mods порта>/
 ---
 
 **English.** A complete Russian translation of Metroid Prime (GameCube USA 1.00) for the native
-[MetroidPrimePort](https://github.com/Odrannnn/MetroidPrimePort) (compatibility checked on v0.43.0; if a newer port version breaks it, please open an issue). No Nintendo data is
+[MetroidPrimePort](https://github.com/Odrannnn/MetroidPrimePort) (compatibility checked on v0.44.0, which also lets the port's own strings be translated; if a newer port version breaks it, please open an issue). No Nintendo data is
 included: build the mod from your own disc with the two commands above (Python 3, Pillow, numpy)
 and put the `russian` and `hud-russian` folders into the port's `mods` folder. With the Remastered import present,
 the build also adds a Cyrillic HD font. Code is MIT, translation text is CC BY 4.0.

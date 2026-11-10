@@ -59,7 +59,24 @@ def main(work):
             b = open(os.path.join(frames_dir, f"{fid}.FRME"), "rb").read()[:len(a)]
             assert len(a) == len(b) and sum(x != y for x, y in zip(a, b)) <= 4 * a.count(b"TXPN"), fid
         disc = {n.split(".")[0] for d in os.listdir(res) for n in os.listdir(os.path.join(res, d))}
-        assert {n.split(".")[0] for n in os.listdir(out) if not n.endswith(".dds")} <= disc, "мод добавляет новые id"
+        # исключение — таблица строк порта: её нет ни в одном PAK, порт читает её из мода сам (ADR 0005)
+        assert {n.split(".")[0] for n in os.listdir(out) if not n.endswith(".dds")} - {build_mod.PORT_TABLE} <= disc, \
+            "мод добавляет новые id"
+        port = dict(strg.parse(open(os.path.join(out, f"{build_mod.PORT_TABLE}.STRG"), "rb").read()))["ENGL"]
+        assert port[0] == "Выйти из игры" and len(port) == 48, port[:3]
+        # длина строк порта (ADR 0005): пункты паузы (с 9) не шире самой длинной английской в каждом
+        # шрифте мода; легенда карты (4–8) — до 9 знаков на пункт и 15 на пару (docs/MODS.md порта)
+        import font
+        table = {int(k): v for k, v in json.load(open("text/port.json", encoding="utf-8")).items() if k[0] != "_"}
+        for name in os.listdir(out):
+            if name.endswith(".FONT"):
+                f = font.parse_font(open(os.path.join(out, name), "rb").read())
+                g = {chr(x.char): x for x in f.glyphs}
+                width = lambda s: sum(g[c].a + g[c].b + g[c].c for c in s if c in g)  # noqa: E731
+                limit = max(width(v["en"]) for i, v in table.items() if i >= 9)
+                assert all(width(v["ru"]) <= limit for i, v in table.items() if i >= 9), name
+        legend = [table[i]["ru"] for i in range(4, 9)]
+        assert all(len(s) <= 9 for s in legend) and all(len(a) + len(b) <= 15 for a, b in zip(legend[::2], legend[1::2]))
     print("build_mod: ok")
     return 0
 

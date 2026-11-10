@@ -67,6 +67,20 @@ def pad_to_32(out):
                 f.write(fill * (32 - n % 32))
 
 
+PORT_TABLE = "504F5254"  # строки порта (ADR 0005); на дисках этой таблицы нет
+
+
+def port_strings(out, path="text/port.json"):
+    """`504F5254.STRG` из text/port.json: строки порта по индексам, без дыр (ADR 0005)."""
+    table = {k: v for k, v in json.load(open(path, encoding="utf-8")).items() if not k.startswith("_")}
+    idx = sorted(map(int, table))
+    if idx != list(range(len(idx))):
+        raise ValueError(f"{path}: индексы не подряд с 0: {idx}")
+    strings = [table[str(i)]["ru"] for i in idx]
+    open(os.path.join(out, f"{PORT_TABLE}.STRG"), "wb").write(strg.build([("ENGL", strings)]))
+    return len(strings)
+
+
 def build(res, ru_path, out, base=None):
     ru = json.load(open(ru_path, encoding="utf-8"))
     if os.path.isdir(out):
@@ -89,6 +103,7 @@ def build(res, ru_path, out, base=None):
             strings[i] = e["ru"]
             written += 1
         open(os.path.join(out, f"{sid}.STRG"), "wb").write(strg.replace_language(data, "ENGL", strings))
+    port_strings(out)
     cyrillic.main(res, out)
     import hud_textures
     hud_textures.main(out)
