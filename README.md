@@ -20,7 +20,8 @@ Mastertranslate и никак с ним не связан.
 - порт [Odrannnn/MetroidPrimePort](https://github.com/Odrannnn/MetroidPrimePort/releases): последняя проверенная версия — **v0.44.0** (см. «Совместимость»). С v0.44.0 по-русски и строки самого порта: «Выйти из игры», его пункты в паузе, легенда карты; на старых версиях они остаются английскими. На более новых версиях перевод, скорее всего, тоже работает; если что-то сломалось, [откройте issue](https://github.com/454135431515/metroid-prime-ru/issues) с версией порта и логом;
 - свой образ **Metroid Prime USA 1.00** (`GM8E01`, ревизия 0) в ISO; другие ревизии и PAL
   не поддерживаются;
-- Python 3 с пакетами Pillow и numpy: `pip install Pillow numpy`.
+- для сборки на Android или из исходников: Python 3 с пакетами Pillow и numpy
+  (`pip install Pillow numpy`). На Windows, Linux и macOS Python не нужен, см. ниже.
 
 ## Совместимость
 Последняя проверка: порт **v0.44.0**, 10 ноября 2026, — **пройдена**.
@@ -32,7 +33,21 @@ Mastertranslate и никак с ним не связан.
 Известное: комната `83F6FF6F/3C785450` при автоматическом обходе иногда отвечает пустой ошибкой
 перехода; прямой переход в неё работает, так было и на прошлых версиях порта.
 
-## Сборка
+## Установка без Python (Windows, Linux, macOS)
+Мод собирается самим портом, из меню.
+1. Скачайте архив импортёра для своей системы со страницы
+   [Releases](https://github.com/454135431515/metroid-prime-ru/releases):
+   `russian-importer-windows-x86_64.zip`, `-linux-x86_64.tar.gz` или `-macos-arm64.zip`.
+2. Распакуйте файл `russian` (Windows: `russian.exe`) в папку `importers` рядом с папкой `mods`
+   порта (создайте её; где лежит `mods`, см. ниже).
+3. F1 → Mods: в списке импортёров у `russian` нажмите **Run**. Поле аргумента можно оставить
+   пустым: импортёр возьмёт образ, выбранный в порте. Другой образ — укажите полный путь к `.iso`
+   в этом поле.
+4. После «Готово» перезапустите игру.
+
+После обновления перевода нажмите Run ещё раз.
+
+## Сборка из исходников
 ```sh
 python -I tools/extract.py "Metroid Prime (USA).iso" work
 python -I tools/build_mod.py work/res text/ru.json <папка mods порта>/russian
@@ -75,8 +90,9 @@ PrimeRecomp: [Metroid-Prime-Remastered-RU](https://github.com/454135431515/Metro
 **English.** A complete Russian translation of Metroid Prime (GameCube USA 1.00) for the native
 [MetroidPrimePort](https://github.com/Odrannnn/MetroidPrimePort) (compatibility checked on v0.44.0, which also lets the port's own strings be translated; if a newer port version breaks it, please open an issue). It is an independent translation made from scratch, not based on or affiliated with the
 Mastertranslate translation. No Nintendo data is
-included: build the mod from your own disc with the two commands above (Python 3, Pillow, numpy)
-and put the `russian` and `hud-russian` folders into the port's `mods` folder. The port's Remastered import is not
-officially supported; for Metroid Prime Remastered in Russian see
-[Metroid-Prime-Remastered-RU](https://github.com/454135431515/Metroid-Prime-Remastered-RU) (for
-PrimeRecomp). Code is MIT, translation text is CC BY 4.0.
+included: put the importer from Releases into the `importers` folder beside the port's `mods`
+folder and press F1 > Mods > russian > Run, or build the mod from your own disc with the two
+commands above (Python 3, Pillow, numpy) and put the `russian` and `hud-russian` folders into
+`mods`. The port's Remastered import is not officially supported; for Metroid Prime Remastered in
+Russian see [Metroid-Prime-Remastered-RU](https://github.com/454135431515/Metroid-Prime-Remastered-RU)
+(for PrimeRecomp). Code is MIT, translation text is CC BY 4.0.

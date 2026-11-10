@@ -14,3 +14,4 @@ python -I tools/test_cyrillic.py work
 python -I tools/test_build_mod.py work
 python -I tools/validate.py work/res text/ru.json --quiet
 python -I tools/test_validate.py work
+python -I tools/test_importer.py
