@@ -34,6 +34,15 @@ def main(work):
             x, y, w, h = font.cell_rect(g, a)
             assert 0 < x and x + w < a.width and 0 < y and y + h < a.height, (fid, ch)
             assert any(v == cyrillic.INK for r in cyrillic.cell_pixels(a, g) for v in r), (fid, ch)
+        # нарисованные вручную (ADR 0007): в ячейке ровно маска из файла, и это не копия цифры
+        drawn = cyrillic.pixel_glyphs(f.name)
+        assert set("ЧЗчз") <= set(drawn), (fid, f.name)
+        for ch, mask in drawn.items():
+            cell = cyrillic.cell_pixels(a, glyphs[ord(ch)])
+            assert cyrillic.ink_mask(cell) == mask, (fid, ch)
+        for ch, digit in (("Ч", "4"), ("З", "3")):
+            assert cyrillic.ink_mask(cyrillic.cell_pixels(a, glyphs[ord(ch)])) != \
+                cyrillic.ink_mask(cyrillic.cell_pixels(a, glyphs[ord(digit)])), (fid, ch)
     print(f"cyrillic: {len(cyrillic.FONTS)} fonts ok, +{len(cyrillic.RECIPES)} glyphs each")
     return test_hd_font(os.path.join(os.path.dirname(os.path.abspath(work)), "mod", "remastered-models",
                                      "font", "deface.sdfont"))
