@@ -6,6 +6,9 @@
 («ЭНЕРГИЯ», «НАЖМИТЕ START», названия регионов в лифтах) перерисованы по-русски. С импортом
 Remastered текст рисуется HD-шрифтом с кириллицей.
 
+Перевод самостоятельный: сделан с нуля по английскому тексту игры, не основан на переводе
+Mastertranslate и никак с ним не связан.
+
 В репозитории нет данных Nintendo: мод собирается у каждого из его собственного диска.
 
 | | |
@@ -64,7 +67,8 @@ python -I tools/build_mod.py work/res text/ru.json <папка mods порта>/
 ---
 
 **English.** A complete Russian translation of Metroid Prime (GameCube USA 1.00) for the native
-[MetroidPrimePort](https://github.com/Odrannnn/MetroidPrimePort) (compatibility checked on v0.44.0, which also lets the port's own strings be translated; if a newer port version breaks it, please open an issue). No Nintendo data is
+[MetroidPrimePort](https://github.com/Odrannnn/MetroidPrimePort) (compatibility checked on v0.44.0, which also lets the port's own strings be translated; if a newer port version breaks it, please open an issue). It is an independent translation made from scratch, not based on or affiliated with the
+Mastertranslate translation. No Nintendo data is
 included: build the mod from your own disc with the two commands above (Python 3, Pillow, numpy)
 and put the `russian` and `hud-russian` folders into the port's `mods` folder. With the Remastered import present,
 the build also adds a Cyrillic HD font. Code is MIT, translation text is CC BY 4.0.
