@@ -3,8 +3,7 @@
 Полный перевод Metroid Prime (GameCube, USA 1.00) для ПК/Android-порта
 [Odrannnn/MetroidPrimePort](https://github.com/Odrannnn/MetroidPrimePort): меню, подсказки,
 сканы, журнал и титры, все 2141 строка. В шрифты игры дорисована кириллица, надписи на текстурах
-(«ЭНЕРГИЯ», «НАЖМИТЕ START», названия регионов в лифтах) перерисованы по-русски. С импортом
-Remastered текст рисуется HD-шрифтом с кириллицей.
+(«ЭНЕРГИЯ», «НАЖМИТЕ START», названия регионов в лифтах) перерисованы по-русски.
 
 Перевод самостоятельный: сделан с нуля по английскому тексту игры, не основан на переводе
 Mastertranslate и никак с ним не связан.
@@ -25,7 +24,7 @@ Mastertranslate и никак с ним не связан.
 
 ## Совместимость
 Последняя проверка: порт **v0.44.0**, 10 ноября 2026, — **пройдена**.
-- Все 276 комнат загружаются с импортом Remastered и без: вылетов и ошибок загрузки ресурсов нет.
+- Все 276 комнат загружаются: вылетов и ошибок загрузки ресурсов нет.
 - Главное меню и «Выйти из игры» проверены в игре; пункты паузы и легенда карты — по ширине текста в
   шрифтах мода.
 - Все проверки `tools/test.sh` прошли.
@@ -51,16 +50,13 @@ python -I tools/build_mod.py work/res text/ru.json <папка mods порта>/
 Язык текста в настройках порта должен остаться английским (по умолчанию): перевод заменяет
 английскую секцию.
 
+Собранные папки на телефон удобнее возить одним zip и распаковывать на месте: тысячи мелких файлов
+по MTP копируются плохо.
+
 ### Remastered
-Если в той же папке `mods` уже есть импорт `remastered-models`, сборка добавляет HD-шрифт с
-кириллицей (`russian/font/deface.sdfont`). Он строится из шрифта импорта и появляется только вместе
-с ним. Импорт делается до сборки мода; после нового импорта мод нужно пересобрать. Без Remastered
-игра использует растровые шрифты с кириллицей.
-
-На Android мод собирается на ПК: скопируйте папку импорта `remastered-models` с телефона в папку,
-куда собираете мод, соберите и верните на телефон `russian` и `hud-russian`. Тысячи мелких файлов
-по MTP копируются плохо: удобнее возить один zip и распаковывать его на месте.
-
+Импорт Remastered (`remastered-models`) с этим переводом официально не поддерживается и не
+проверяется. Для русского Metroid Prime Remastered есть отдельный перевод для ПК-порта
+PrimeRecomp: [Metroid-Prime-Remastered-RU](https://github.com/454135431515/Metroid-Prime-Remastered-RU).
 
 ## Не выкладывайте собранный мод
 Собранные папки `russian` и `hud-russian` содержат изменённые файлы игры (шрифты, интерфейс, таблицы строк).
@@ -80,5 +76,7 @@ python -I tools/build_mod.py work/res text/ru.json <папка mods порта>/
 [MetroidPrimePort](https://github.com/Odrannnn/MetroidPrimePort) (compatibility checked on v0.44.0, which also lets the port's own strings be translated; if a newer port version breaks it, please open an issue). It is an independent translation made from scratch, not based on or affiliated with the
 Mastertranslate translation. No Nintendo data is
 included: build the mod from your own disc with the two commands above (Python 3, Pillow, numpy)
-and put the `russian` and `hud-russian` folders into the port's `mods` folder. With the Remastered import present,
-the build also adds a Cyrillic HD font. Code is MIT, translation text is CC BY 4.0.
+and put the `russian` and `hud-russian` folders into the port's `mods` folder. The port's Remastered import is not
+officially supported; for Metroid Prime Remastered in Russian see
+[Metroid-Prime-Remastered-RU](https://github.com/454135431515/Metroid-Prime-Remastered-RU) (for
+PrimeRecomp). Code is MIT, translation text is CC BY 4.0.
