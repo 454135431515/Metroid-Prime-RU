@@ -22,7 +22,7 @@
 
 ## Решение
 - Статическая страница на GitHub Pages этого репозитория
-  (`454135431515.github.io/metroid-prime-ru/`): игрок выбирает свой ISO и получает zip с `russian` и
+  (`454135431515.github.io/Metroid-Prime-RU/`): игрок выбирает свой ISO и получает zip с `russian` и
   `hud-russian`. Сборка идёт целиком на устройстве, образ никуда не загружается, сервера нет.
 - Внутри — тот же `tools/` без переписывания, в Pyodide (CPython в WebAssembly, Pillow и numpy в его
   составе), в Web Worker. Образ монтируется как WORKERFS: читается кусками по запросу, в память

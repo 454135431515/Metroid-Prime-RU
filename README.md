@@ -17,7 +17,7 @@ Mastertranslate и никак с ним не связан.
 | ![Журнал](docs/screenshots/logbook.png) | ![Карта и легенда](docs/screenshots/map.png) |
 
 ## Что нужно
-- порт [Odrannnn/MetroidPrimePort](https://github.com/Odrannnn/MetroidPrimePort/releases): последняя проверенная версия — **v0.44.0** (см. «Совместимость»). С v0.44.0 по-русски и строки самого порта: «Выйти из игры», его пункты в паузе, легенда карты; на старых версиях они остаются английскими. На более новых версиях перевод, скорее всего, тоже работает; если что-то сломалось, [откройте issue](https://github.com/454135431515/metroid-prime-ru/issues) с версией порта и логом;
+- порт [Odrannnn/MetroidPrimePort](https://github.com/Odrannnn/MetroidPrimePort/releases): последняя проверенная версия — **v0.44.0** (см. «Совместимость»). С v0.44.0 по-русски и строки самого порта: «Выйти из игры», его пункты в паузе, легенда карты; на старых версиях они остаются английскими. На более новых версиях перевод, скорее всего, тоже работает; если что-то сломалось, [откройте issue](https://github.com/454135431515/Metroid-Prime-RU/issues) с версией порта и логом;
 - свой образ **Metroid Prime USA 1.00** (`GM8E01`, ревизия 0) в ISO; другие ревизии и PAL
   не поддерживаются;
 - для сборки на Android или из исходников: Python 3 с пакетами Pillow и numpy
@@ -36,7 +36,7 @@ Mastertranslate и никак с ним не связан.
 ## Установка без Python (Windows, Linux, macOS)
 Мод собирается самим портом, из меню.
 1. Скачайте архив импортёра для своей системы со страницы
-   [Releases](https://github.com/454135431515/metroid-prime-ru/releases):
+   [Releases](https://github.com/454135431515/Metroid-Prime-RU/releases):
    `russian-importer-windows-x86_64.zip`, `-linux-x86_64.tar.gz` или `-macos-arm64.zip`.
 2. Распакуйте файл `russian` (Windows: `russian.exe`) в папку `importers` рядом с папкой `mods`
    порта (создайте её; где лежит `mods`, см. ниже).
