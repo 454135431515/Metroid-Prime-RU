@@ -59,7 +59,11 @@ def main(work):
             b = open(os.path.join(frames_dir, f"{fid}.FRME"), "rb").read()[:len(a)]
             assert len(a) == len(b) and sum(x != y for x, y in zip(a, b)) <= 4 * a.count(b"TXPN"), fid
         disc = {n.split(".")[0] for d in os.listdir(res) for n in os.listdir(os.path.join(res, d))}
-        assert {n.split(".")[0] for n in os.listdir(out) if not n.endswith(".dds")} <= disc, "мод добавляет новые id"
+        # исключение — таблица строк порта: её нет ни в одном PAK, порт читает её из мода сам (ADR 0005)
+        assert {n.split(".")[0] for n in os.listdir(out) if not n.endswith(".dds")} - {build_mod.PORT_TABLE} <= disc, \
+            "мод добавляет новые id"
+        port = dict(strg.parse(open(os.path.join(out, f"{build_mod.PORT_TABLE}.STRG"), "rb").read()))["ENGL"]
+        assert port[0] == "Выйти из игры" and len(port) == 48, port[:3]
     print("build_mod: ok")
     return 0
 
