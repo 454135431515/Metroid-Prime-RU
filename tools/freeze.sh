@@ -7,5 +7,5 @@ set -e
 cd "$(dirname "$0")/.."
 sep=":"; case "$(uname -s)" in MINGW*|MSYS*|CYGWIN*) sep=";";; esac
 python -m PyInstaller --onefile --name russian --distpath dist --workpath build/freeze \
-  --paths tools --add-data "text/ru.json${sep}text" --add-data "text/panes.json${sep}text" --add-data "tools/glyphs${sep}glyphs" --add-data "tools/pixel${sep}pixel" \
+  --paths tools --add-data "text/ru.json${sep}text" --add-data "text/panes.json${sep}text" --add-data "text/port.json${sep}text" --add-data "tools/glyphs${sep}glyphs" --add-data "tools/pixel${sep}pixel" \
   --log-level WARN tools/importer.py
