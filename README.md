@@ -20,8 +20,8 @@ Mastertranslate и никак с ним не связан.
 - порт [Odrannnn/MetroidPrimePort](https://github.com/Odrannnn/MetroidPrimePort/releases): последняя проверенная версия — **v0.44.0** (см. «Совместимость»). С v0.44.0 по-русски и строки самого порта: «Выйти из игры», его пункты в паузе, легенда карты; на старых версиях они остаются английскими. На более новых версиях перевод, скорее всего, тоже работает; если что-то сломалось, [откройте issue](https://github.com/454135431515/Metroid-Prime-RU/issues) с версией порта и логом;
 - свой образ **Metroid Prime USA 1.00** (`GM8E01`, ревизия 0) в ISO; другие ревизии и PAL
   не поддерживаются;
-- для сборки на Android или из исходников: Python 3 с пакетами Pillow и numpy
-  (`pip install Pillow numpy`). На Windows, Linux и macOS Python не нужен, см. ниже.
+- ничего ставить не нужно: мод собирается прямо в браузере, на телефоне или компьютере (см. ниже).
+  Для сборки из исходников — Python 3 с пакетами Pillow и numpy (`pip install Pillow numpy`).
 
 ## Совместимость
 Последняя проверка: порт **v0.44.0**, 10 ноября 2026, — **пройдена**.
@@ -32,6 +32,12 @@ Mastertranslate и никак с ним не связан.
 
 Известное: комната `83F6FF6F/3C785450` при автоматическом обходе иногда отвечает пустой ошибкой
 перехода; прямой переход в неё работает, так было и на прошлых версиях порта.
+
+## Сборка в браузере (Android, Windows, Linux, macOS)
+Откройте **https://454135431515.github.io/Metroid-Prime-RU/**, выберите свой образ и нажмите «Собрать
+перевод». Через несколько секунд страница отдаст архив с папками `russian` и `hud-russian`:
+распакуйте его в папку `mods` порта (где она лежит, см. ниже). Образ никуда не загружается — сборка
+идёт в браузере на вашем устройстве. Первый раз страница скачивает около 15 МБ (Python для браузера).
 
 ## Установка без Python (Windows, Linux, macOS)
 Мод собирается самим портом, из меню.
@@ -90,7 +96,8 @@ PrimeRecomp: [Metroid-Prime-Remastered-RU](https://github.com/454135431515/Metro
 **English.** A complete Russian translation of Metroid Prime (GameCube USA 1.00) for the native
 [MetroidPrimePort](https://github.com/Odrannnn/MetroidPrimePort) (compatibility checked on v0.44.0, which also lets the port's own strings be translated; if a newer port version breaks it, please open an issue). It is an independent translation made from scratch, not based on or affiliated with the
 Mastertranslate translation. No Nintendo data is
-included: put the importer from Releases into the `importers` folder beside the port's `mods`
+included: open https://454135431515.github.io/Metroid-Prime-RU/ and build the mod from your own disc
+image right in the browser (Android too; the image never leaves your device), or put the importer from Releases into the `importers` folder beside the port's `mods`
 folder and press F1 > Mods > russian > Run, or build the mod from your own disc with the two
 commands above (Python 3, Pillow, numpy) and put the `russian` and `hud-russian` folders into
 `mods`. The port's Remastered import is not officially supported; for Metroid Prime Remastered in

@@ -1,0 +1,58 @@
+# Веб-сборка перевода (ADR 0006): страница на GitHub Pages, где игрок собирает мод из своего образа
+# прямо в браузере. Pyodide и колёса numpy/Pillow лежат на самой странице, не тянутся с чужого CDN.
+name: pages
+
+on:
+  push:
+    branches: [main]
+    paths: ["web/**", "tools/**", "text/**", ".github/workflows/pages.yml"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+env:
+  PYODIDE: "0.27.7"
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: pyodide
+        run: |
+          mkdir -p /tmp/pyo /tmp/wheels
+          cd /tmp/pyo && npm pack "pyodide@$PYODIDE" --silent && tar xzf "pyodide-$PYODIDE.tgz"
+          cd /tmp/wheels
+          python3 - <<'EOF'
+          import hashlib, json, os, urllib.request
+          lock = json.load(open("/tmp/pyo/package/pyodide-lock.json"))["packages"]
+          for name in ("numpy", "pillow"):
+              f = lock[name]["file_name"]
+              url = f"https://cdn.jsdelivr.net/pyodide/v{os.environ['PYODIDE']}/full/{f}"
+              data = urllib.request.urlopen(url).read()
+              assert hashlib.sha256(data).hexdigest() == lock[name]["sha256"], f
+              open(f, "wb").write(data)
+              print(f, len(data))
+          EOF
+      - name: site
+        run: sh web/assemble.sh /tmp/pyo/package /tmp/wheels _site
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

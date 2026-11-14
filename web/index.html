@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Metroid Prime: сборка перевода</title>
+<style>
+  :root { --bg: #f6f7f9; --fg: #1b1d22; --muted: #5d6470; --card: #fff; --line: #d9dde3; --accent: #c2410c; --ok: #15803d; --err: #b91c1c; }
+  @media (prefers-color-scheme: dark) {
+    :root { --bg: #121417; --fg: #e8eaed; --muted: #9aa1ab; --card: #1b1e23; --line: #2c3038; --accent: #fb923c; --ok: #4ade80; --err: #f87171; }
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--fg); font: 16px/1.5 system-ui, sans-serif; }
+  main { max-width: 640px; margin: 0 auto; padding: 24px 16px 48px; }
+  h1 { font-size: 1.4rem; margin: 0 0 4px; }
+  p { margin: 8px 0; }
+  .muted { color: var(--muted); font-size: .92rem; }
+  .card { background: var(--card); border: 1px solid var(--line); border-radius: 10px; padding: 16px; margin: 16px 0; }
+  label.pick { display: block; padding: 14px; border: 2px dashed var(--line); border-radius: 8px; text-align: center; cursor: pointer; }
+  input[type=file] { display: none; }
+  button, a.button { display: inline-block; width: 100%; margin-top: 12px; padding: 12px; border: 0; border-radius: 8px;
+    background: var(--accent); color: #fff; font: inherit; font-weight: 600; text-align: center; text-decoration: none; cursor: pointer; }
+  button:disabled { opacity: .5; cursor: default; }
+  pre { margin: 12px 0 0; padding: 10px; max-height: 220px; overflow: auto; background: var(--bg); border-radius: 6px;
+    font-size: .8rem; white-space: pre-wrap; word-break: break-word; }
+  .ok { color: var(--ok); font-weight: 600; } .err { color: var(--err); font-weight: 600; }
+  ol { padding-left: 20px; margin: 8px 0; } code { font-size: .9em; }
+</style>
+</head>
+<body>
+<main>
+  <h1>Metroid Prime: русский перевод</h1>
+  <p class="muted">Сборка мода для порта MetroidPrimePort прямо в браузере — на телефоне или компьютере.
+    Образ не покидает устройство: всё считается здесь, ничего не загружается на сервер.</p>
+
+  <div class="card">
+    <p><b>1.</b> Выберите свой образ <b>Metroid Prime USA 1.00</b> (<code>GM8E01</code>, ревизия 0) в формате ISO.</p>
+    <label class="pick" for="iso"><span id="name">Выбрать файл .iso</span></label>
+    <input id="iso" type="file" accept=".iso,application/octet-stream">
+    <button id="go" disabled>2. Собрать перевод</button>
+    <p id="status" class="muted"></p>
+    <a id="save" class="button" hidden download="metroid-prime-russian.zip">3. Сохранить архив</a>
+    <pre id="log" hidden></pre>
+  </div>
+
+  <div class="card">
+    <p><b>Установка</b></p>
+    <ol>
+      <li>Распакуйте архив: внутри две папки, <code>russian</code> и <code>hud-russian</code>. Нужны обе.</li>
+      <li>Положите их в папку <code>mods</code> порта:
+        <ul>
+          <li>Android: <code>/storage/emulated/0/MetroidPrime/mods</code> (сначала в порте F1 → System →
+            Data folder → общая память);</li>
+          <li>Windows: <code>user\mods</code> рядом с <code>metroid_prime_port.exe</code>;</li>
+          <li>Linux: <code>mods</code> рядом с файлом <code>.AppImage</code>.</li>
+        </ul></li>
+      <li>Язык текста в настройках порта оставьте английским и перезапустите игру.</li>
+    </ol>
+    <p class="muted">Готовый мод не выкладывайте: в нём изменённые файлы игры. Делитесь ссылкой на эту страницу.
+      Исходники и вопросы: <a href="https://github.com/454135431515/Metroid-Prime-RU">Metroid-Prime-RU</a>.</p>
+  </div>
+</main>
+<script>
+  const $ = (id) => document.getElementById(id);
+  const iso = $("iso"), go = $("go"), log = $("log"), status = $("status"), save = $("save");
+  let worker = null;
+  const show = (text, cls) => { status.textContent = text; status.className = cls || "muted"; };
+
+  iso.onchange = () => {
+    const f = iso.files[0];
+    $("name").textContent = f ? `${f.name} (${(f.size / 2 ** 30).toFixed(2)} ГБ)` : "Выбрать файл .iso";
+    go.disabled = !f;
+    save.hidden = true;
+  };
+
+  go.onclick = () => {
+    const f = iso.files[0];
+    if (!f) return;
+    go.disabled = true; save.hidden = true; log.hidden = false; log.textContent = "";
+    show("Сборка… первый раз дольше: загружается Python (около 15 МБ).");
+    worker = worker || new Worker("worker.js");
+    worker.onmessage = (e) => {
+      const m = e.data;
+      if (m.kind === "log") { log.textContent += m.text + "\n"; log.scrollTop = log.scrollHeight; }
+      else if (m.kind === "done") {
+        if (save.href) URL.revokeObjectURL(save.href);
+        save.href = URL.createObjectURL(new Blob([m.zip], { type: "application/zip" }));
+        save.hidden = false; go.disabled = false;
+        show("Готово. Сохраните архив и распакуйте его в папку mods порта.", "ok");
+      } else if (m.kind === "error") {
+        if (m.text) log.textContent += m.text + "\n";
+        go.disabled = false;
+        show("Не получилось — причина в журнале ниже.", "err");
+      }
+    };
+    worker.onerror = (e) => { go.disabled = false; show("Ошибка: " + e.message, "err"); };
+    worker.postMessage({ file: f });
+  };
+</script>
+</body>
+</html>
