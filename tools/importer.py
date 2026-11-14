@@ -24,7 +24,8 @@ import extract  # noqa: E402
 # Порт читает вывод через pipe; на Windows Python писал бы в нём в кодировке системы (cp1252 —
 # UnicodeEncodeError на русском тексте).
 for _s in (sys.stdout, sys.stderr):
-    _s.reconfigure(encoding="utf-8", errors="replace")
+    if hasattr(_s, "reconfigure"):  # в браузере (Pyodide) вывод уже UTF-8
+        _s.reconfigure(encoding="utf-8", errors="replace")
 
 
 def fail(msg):
@@ -65,6 +66,23 @@ def check_disc(path):
              f"а это {head[:6].decode('ascii', 'replace')} ревизия {head[7] if len(head) > 7 else '?'}")
 
 
+def build_mods(disc, mods, root=HERE):
+    """Мод из проверенного образа в `<mods>/russian` и `<mods>/hud-russian`; общий для импортёра
+    и веб-сборки (web/, ADR 0006)."""
+    work = tempfile.mkdtemp(prefix="mp-russian-")
+    try:
+        print("Извлечение ресурсов...", flush=True)
+        extract.main(disc, work)
+        print("Сборка перевода...", flush=True)
+        os.chdir(root)  # build_mod берёт text/panes.json и text/port.json относительно корня
+        stale = build_mod.build(os.path.join(work, "res"), os.path.join(root, "text", "ru.json"),
+                                os.path.join(mods, "russian"))
+    finally:
+        shutil.rmtree(work, ignore_errors=True)
+    if stale:
+        fail(f"{stale} строк не совпали с диском: образ не USA 1.00 или повреждён")
+
+
 def main(argv):
     mods = os.environ.get("MP_MODS_DIR") or fail("MP_MODS_DIR не задан: запускайте из порта (F1 > Mods > Run)")
     mods = os.path.abspath(mods)
@@ -72,18 +90,7 @@ def main(argv):
     disc = find_disc(argv[1] if len(argv) > 1 and argv[1].strip() else None, pref)
     check_disc(disc)
     print(f"Диск: {disc}", flush=True)
-    work = tempfile.mkdtemp(prefix="mp-russian-")
-    try:
-        print("Извлечение ресурсов...", flush=True)
-        extract.main(disc, work)
-        print("Сборка перевода...", flush=True)
-        os.chdir(HERE)  # build_mod берёт text/panes.json относительно корня
-        stale = build_mod.build(os.path.join(work, "res"), os.path.join(HERE, "text", "ru.json"),
-                                os.path.join(mods, "russian"))
-    finally:
-        shutil.rmtree(work, ignore_errors=True)
-    if stale:
-        fail(f"{stale} строк не совпали с диском: образ не USA 1.00 или повреждён")
+    build_mods(disc, mods)
     print("Готово: перевод в mods/russian. Перезапустите игру.", flush=True)
     return 0
 
